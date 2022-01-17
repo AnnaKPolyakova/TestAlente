@@ -57,7 +57,7 @@ class TestEventAPI:
             f"Проверьте, что при GET запросе {url} "
             f"возвращается статус {code}"
         )
-        assert len(response.data) == Event.objects.all().count(), (
+        assert response.data["count"] == Event.objects.all().count(), (
             f"Проверьте, что при GET запросе {url} "
             f"возвращается правильное кол-во объектов"
         )

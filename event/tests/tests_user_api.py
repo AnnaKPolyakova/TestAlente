@@ -40,8 +40,17 @@ class TestUserAPI:
         assert response.status_code == code, (
             f"Проверьте, что при GET запросе {url} возвращается статус {code}"
         )
-        assert len(response.data) == 1, (
-            f"Проверьте, что при GET запросе {url} возвращается статус {code}"
+
+
+    def test_get_user_count_objects_url(self, moderator_client):
+        """
+        Информацию обо всех пользователях может видеть только модератор
+        """
+        url = USER_LIST_URL
+        response = moderator_client.get(url)
+        assert response.data["count"] == 1, (
+            f"Проверьте, что при GET запросе {url} возвращает правильное "
+            f"кол-вол объектов"
         )
 
     @pytest.mark.parametrize(

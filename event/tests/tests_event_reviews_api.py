@@ -1,6 +1,8 @@
 import pytest
 from django.urls import reverse
 
+from event.models import Review
+
 pytestmark = pytest.mark.django_db
 
 EVENT_REVIEWS_LIST_URL = "reviews-list"
@@ -103,17 +105,55 @@ class TestReviewsAPI:
         """
         Любой может увидеть отзывы
         """
-        urls_and_count_objects = {
-            reverse(EVENT_REVIEWS_LIST_URL, args=[event_2.id]): 1,
-            reverse(EVENT_REVIEWS_DETAIL_URL, args=[event_2.id, review_2.id]): 6
-        }
-        for url, count in urls_and_count_objects.items():
+        urls = [
+            reverse(EVENT_REVIEWS_LIST_URL, args=[event_2.id]),
+            reverse(EVENT_REVIEWS_DETAIL_URL, args=[event_2.id, review_2.id]),
+        ]
+        for url in urls:
             response = user_client.get(url)
             assert response.status_code == code, (
                 f"Проверьте, что при GET запросе {url} "
                 f"возвращается статус {code}"
             )
-            assert len(response.data) == count, (
+
+    @pytest.mark.parametrize(
+        "user_client, code",
+        [
+            (pytest.lazy_fixture("moderator_client"), 200),
+            (pytest.lazy_fixture("not_moderator_client"), 200),
+            (pytest.lazy_fixture("guest_client"), 200),
+        ],
+    )
+    def test_get_event_reviews_count_objects_url(
+            self, user_client, code, event_2, review_2
+    ):
+        """
+        Запрос возвращает верное кол-во объектов
+        """
+        url = reverse(EVENT_REVIEWS_LIST_URL, args=[event_2.id])
+        response = user_client.get(url)
+        assert response.data["count"] == Review.objects.all().count(), (
+                f"Проверьте, что при GET запросе {url} "
+                f"возвращается данные объектов"
+            )
+
+    @pytest.mark.parametrize(
+        "user_client, code",
+        [
+            (pytest.lazy_fixture("moderator_client"), 200),
+            (pytest.lazy_fixture("not_moderator_client"), 200),
+            (pytest.lazy_fixture("guest_client"), 200),
+        ],
+    )
+    def test_get_event_reviews_detail_count_objects_url(
+            self, user_client, code, event_2, review_2
+    ):
+        """
+        Запрос возвращает верное кол-во объектов
+        """
+        url = reverse(EVENT_REVIEWS_DETAIL_URL, args=[event_2.id, review_2.id])
+        response = user_client.get(url)
+        assert len(response.data) == 6, (
                 f"Проверьте, что при GET запросе {url} "
                 f"возвращается данные объектов"
             )

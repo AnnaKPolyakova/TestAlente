@@ -28,6 +28,7 @@ class UserViewSet(ModelViewSet):
 class EventViewSet(ModelViewSet):
     queryset = Event.objects.all()
     permission_classes = (IsModeratorOrRead,)
+    filterset_fields = ['title', "start_at", "description", "address", "type"]
 
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
