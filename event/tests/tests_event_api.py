@@ -17,7 +17,7 @@ class TestEventAPI:
             (pytest.lazy_fixture("guest_client"), 403),
         ],
     )
-    def test_create_event_url(self, user_client, code):
+    def test_post_event_url(self, user_client, code):
         """
         Только модератор может создать событие
         """
@@ -47,13 +47,17 @@ class TestEventAPI:
         """
         Любой может посмотреть все события
         """
-        urls = [
-            EVENT_LIST_URL,
-            reverse(EVENT_DETAIL_URL, args=[event.id])
-        ]
-        for url in urls:
+        urls_and_count_onbjects = {
+            EVENT_LIST_URL: 1,
+            reverse(EVENT_DETAIL_URL, args=[event.id]): 7,
+        }
+        for url, count in urls_and_count_onbjects.items():
             response = user_client.get(url)
             assert response.status_code == code, (
+                f"Проверьте, что при GET запросе {url} "
+                f"возвращается статус {code}"
+            )
+            assert len(response.data) == count, (
                 f"Проверьте, что при GET запросе {url} "
                 f"возвращается статус {code}"
             )

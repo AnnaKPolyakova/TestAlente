@@ -40,6 +40,9 @@ class TestUserAPI:
         assert response.status_code == code, (
             f"Проверьте, что при GET запросе {url} возвращается статус {code}"
         )
+        assert len(response.data) == 1, (
+            f"Проверьте, что при GET запросе {url} возвращается статус {code}"
+        )
 
     @pytest.mark.parametrize(
         "user_client, code",

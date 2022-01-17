@@ -109,7 +109,7 @@ def event(moderator_user):
 
 
 @pytest.fixture
-def event2(moderator_user):
+def event_2(moderator_user):
     return Event.objects.create(
         user=moderator_user,
         title="title2",
@@ -121,10 +121,18 @@ def event2(moderator_user):
 
 
 @pytest.fixture
-def event_participant(not_moderator_user, event2):
+def event_participant(not_moderator_user, event):
     return EventParticipant.objects.create(
         user=not_moderator_user,
-        event=event2,
+        event=event,
+    )
+
+
+@pytest.fixture
+def event_participant_2(not_moderator_user, event_2):
+    return EventParticipant.objects.create(
+        user=not_moderator_user,
+        event=event_2,
     )
 
 
@@ -134,6 +142,19 @@ def review(not_moderator_user, event):
         text="text",
         author=not_moderator_user,
         event=event,
+        file=SimpleUploadedFile(
+            name="small.gif", content=SMALL_GIF, content_type="image/gif"
+        ),
+        pub_date="2021-12-12T00:00:00Z",
+    )
+
+
+@pytest.fixture
+def review_2(not_moderator_user, event_2):
+    return Review.objects.create(
+        text="text",
+        author=not_moderator_user,
+        event=event_2,
         file=SimpleUploadedFile(
             name="small.gif", content=SMALL_GIF, content_type="image/gif"
         ),

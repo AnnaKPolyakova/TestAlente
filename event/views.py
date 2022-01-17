@@ -1,8 +1,7 @@
 from django.contrib.auth import get_user_model
 from rest_framework import status
-from rest_framework.decorators import action, api_view, permission_classes
+from rest_framework.decorators import api_view, permission_classes
 from rest_framework.generics import get_object_or_404
-from rest_framework.permissions import IsAuthenticated
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.response import Response
 
@@ -35,7 +34,7 @@ class EventViewSet(ModelViewSet):
 
 
 @api_view(['GET'])
-@permission_classes([IsAuthenticated])
+@permission_classes([IsNotModerator])
 def get_users_events(request):
     events_id = EventParticipant.objects.filter(
         user=request.user).values_list('event', flat=True)
