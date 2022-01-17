@@ -12,7 +12,8 @@ from event.permissions import (
     IsNotModerator,
     PermissionForReview
 )
-from event.serializers import UserSerializer, EventSerializer, ReviewSerializer
+from event.serializers import UserSerializer, EventSerializer, ReviewSerializer, \
+    EventModeratorSerializer
 from event.utils import send_email
 
 User = get_user_model()
@@ -26,11 +27,17 @@ class UserViewSet(ModelViewSet):
 
 class EventViewSet(ModelViewSet):
     queryset = Event.objects.all()
-    serializer_class = EventSerializer
     permission_classes = (IsModeratorOrRead,)
 
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
+
+    def get_serializer_class(self, *args, **kwargs):
+        if "pk" in self.kwargs:
+            event = get_object_or_404(Event, id=self.kwargs["pk"])
+            if self.request.user == event.user:
+                return EventModeratorSerializer
+        return EventSerializer
 
 
 @api_view(['GET'])

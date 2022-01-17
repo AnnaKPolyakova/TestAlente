@@ -33,6 +33,21 @@ class EventSerializer(serializers.ModelSerializer):
         read_only_fields = ["user"]
 
 
+class EventModeratorSerializer(serializers.ModelSerializer):
+
+    participant = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Event
+        fields = "__all__"
+        read_only_fields = ["user"]
+
+    def get_participant(self, obj):
+        users_id = obj.event_participants.values_list('user', flat=True)
+        users = User.objects.filter(id__in=users_id)
+        return UserSerializer(users, many=True).data
+
+
 class ReviewSerializer(serializers.ModelSerializer):
 
     class Meta:

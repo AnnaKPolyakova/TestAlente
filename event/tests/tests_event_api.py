@@ -1,6 +1,8 @@
 import pytest
 from django.urls import reverse
 
+from event.models import Event
+
 EVENT_LIST_URL = reverse("event-list")
 EVENT_DETAIL_URL = "event-detail"
 
@@ -43,24 +45,44 @@ class TestEventAPI:
             (pytest.lazy_fixture("guest_client"), 200),
         ],
     )
-    def test_get_event_url(self, user_client, code, event):
+    def test_user_get_event_url(
+            self, user_client, code, event
+    ):
         """
-        Любой может посмотреть все события
+        Все могут посмотреть все события
         """
-        urls_and_count_onbjects = {
-            EVENT_LIST_URL: 1,
-            reverse(EVENT_DETAIL_URL, args=[event.id]): 7,
-        }
-        for url, count in urls_and_count_onbjects.items():
-            response = user_client.get(url)
-            assert response.status_code == code, (
-                f"Проверьте, что при GET запросе {url} "
-                f"возвращается статус {code}"
-            )
-            assert len(response.data) == count, (
-                f"Проверьте, что при GET запросе {url} "
-                f"возвращается статус {code}"
-            )
+        url = EVENT_LIST_URL
+        response = user_client.get(url)
+        assert response.status_code == code, (
+            f"Проверьте, что при GET запросе {url} "
+            f"возвращается статус {code}"
+        )
+        assert len(response.data) == Event.objects.all().count(), (
+            f"Проверьте, что при GET запросе {url} "
+            f"возвращается правильное кол-во объектов"
+        )
+
+    def test_moderator_get_event_url(self, moderator_client, event):
+        """
+        Автор события может видеть участников события
+        """
+        url = reverse(EVENT_DETAIL_URL, args=[event.id])
+        response = moderator_client.get(url)
+        assert "participant" in response.data, (
+            f"Проверьте, что при GET запросе {url} "
+            f"возвращается правильное кол-во полей объекта"
+        )
+
+    def test_not_moderator_get_event_url(self, not_moderator_client, event):
+        """
+        Не автор события может видеть участников события
+        """
+        url = reverse(EVENT_DETAIL_URL, args=[event.id])
+        response = not_moderator_client.get(url)
+        assert "participant" not in response.data, (
+            f"Проверьте, что при GET запросе {url} "
+            f"возвращается правильное кол-во полей объекта"
+        )
 
     @pytest.mark.parametrize(
         "user_client, code",
