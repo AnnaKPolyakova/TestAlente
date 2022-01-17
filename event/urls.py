@@ -9,7 +9,7 @@ from .views import (
 from rest_framework import routers
 
 router = routers.DefaultRouter()
-router.register(r'auth/user', UserViewSet)
+router.register(r'auth/user', UserViewSet, basename="user")
 router.register(r'event', EventViewSet)
 router.register(
     r'event/(?P<event_id>\d+)/reviews',
@@ -24,7 +24,7 @@ extra_patterns = [
     path(
         "event_registration/<int:event_id>/",
         get_registration_to_event,
-        name="add_favorites",
+        name="event_registration",
     ),
 ]
 

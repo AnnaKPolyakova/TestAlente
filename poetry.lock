@@ -332,6 +332,17 @@ docs = ["sphinx", "sphinx-rtd-theme"]
 testing = ["django", "django-configurations (>=2.0)"]
 
 [[package]]
+name = "pytest-lazy-fixture"
+version = "0.6.3"
+description = "It helps to use fixtures in pytest.mark.parametrize"
+category = "main"
+optional = false
+python-versions = "*"
+
+[package.dependencies]
+pytest = ">=3.2.5"
+
+[[package]]
 name = "pytz"
 version = "2021.3"
 description = "World timezone definitions, modern and historical"
@@ -390,7 +401,7 @@ python-versions = ">=3.6"
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.9"
-content-hash = "936c9d3a2f939c5c2d2f857c4e222fee9e3ed44c0744c2e3510527038fc6c51d"
+content-hash = "49639c0c919f6bfb5ec3480bd151ced6e0d3a9902082115c17db7414276c7d86"
 
 [metadata.files]
 asgiref = [
@@ -572,6 +583,10 @@ pytest = [
 pytest-django = [
     {file = "pytest-django-4.5.2.tar.gz", hash = "sha256:d9076f759bb7c36939dbdd5ae6633c18edfc2902d1a69fdbefd2426b970ce6c2"},
     {file = "pytest_django-4.5.2-py3-none-any.whl", hash = "sha256:c60834861933773109334fe5a53e83d1ef4828f2203a1d6a0fa9972f4f75ab3e"},
+]
+pytest-lazy-fixture = [
+    {file = "pytest-lazy-fixture-0.6.3.tar.gz", hash = "sha256:0e7d0c7f74ba33e6e80905e9bfd81f9d15ef9a790de97993e34213deb5ad10ac"},
+    {file = "pytest_lazy_fixture-0.6.3-py3-none-any.whl", hash = "sha256:e0b379f38299ff27a653f03eaa69b08a6fd4484e46fd1c9907d984b9f9daeda6"},
 ]
 pytz = [
     {file = "pytz-2021.3-py2.py3-none-any.whl", hash = "sha256:3672058bc3453457b622aab7a1c3bfd5ab0bdae451512f6cf25f64ed37f5b87c"},
