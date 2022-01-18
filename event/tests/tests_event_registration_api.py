@@ -6,8 +6,7 @@ EVENT_REGISTRATION_URL = "event_registration"
 pytestmark = pytest.mark.django_db
 
 
-class TestEventAPI:
-
+class TestEventRegistrationAPI:
     @pytest.mark.parametrize(
         "user_client, code",
         [
@@ -23,6 +22,5 @@ class TestEventAPI:
         url = reverse(EVENT_REGISTRATION_URL, args=[event.id])
         response = user_client.post(url)
         assert response.status_code == code, (
-            f"Проверьте, что при POST запросе {url} "
-            f"возвращается статус {code}"
+            f"Проверьте, что при POST запросе {url} " f"возвращается статус {code}"
         )

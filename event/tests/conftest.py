@@ -1,13 +1,13 @@
-import pytest
-from django.contrib.auth import get_user_model
-from rest_framework.test import APIClient
 import shutil
 import tempfile
 
+import pytest
 from django.conf import settings
+from django.contrib.auth import get_user_model
 from django.core.files.uploadedfile import SimpleUploadedFile
+from rest_framework.test import APIClient
 
-from event.models import Event, Review, EventParticipant
+from event.models import Event, EventParticipant, Review
 
 SMALL_GIF = (
     b"\x47\x49\x46\x38\x39\x61\x01\x00"
@@ -60,7 +60,7 @@ def moderator_user():
         username=NAME,
         email=EMAIL,
         password=PASSWORD,
-        moderator=True,
+        is_moderator=True,
     )
 
 
@@ -104,7 +104,7 @@ def event(moderator_user):
         type="REGIONAL",
         address="address",
         description="description",
-        start_at="3022-12-12T00:00:00Z"
+        start_at="3022-12-12T00:00:00Z",
     )
 
 
@@ -116,7 +116,7 @@ def event_2(moderator_user):
         type="REGIONAL",
         address="address",
         description="description",
-        start_at="2021-12-12T00:00:00Z"
+        start_at="2021-12-12T00:00:00Z",
     )
 
 

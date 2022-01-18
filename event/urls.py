@@ -1,21 +1,13 @@
 from django.urls import include, path
-from .views import (
-    UserViewSet,
-    ReviewViewSet,
-    EventViewSet,
-    get_registration_to_event,
-    get_users_events,
-)
 from rest_framework import routers
 
+from .views import (EventViewSet, ReviewViewSet, UserViewSet,
+                    get_registration_to_event, get_users_events)
+
 router = routers.DefaultRouter()
-router.register(r'auth/user', UserViewSet, basename="user")
-router.register(r'event', EventViewSet)
-router.register(
-    r'event/(?P<event_id>\d+)/reviews',
-    ReviewViewSet,
-    basename='reviews'
-)
+router.register(r"auth/user", UserViewSet, basename="user")
+router.register(r"event", EventViewSet)
+router.register(r"event/(?P<event_id>\d+)/reviews", ReviewViewSet, basename="reviews")
 
 
 extra_patterns = [

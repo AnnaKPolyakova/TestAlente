@@ -10,7 +10,6 @@ pytestmark = pytest.mark.django_db
 
 
 class TestEventAPI:
-
     @pytest.mark.parametrize(
         "user_client, code",
         [
@@ -33,8 +32,7 @@ class TestEventAPI:
         }
         response = user_client.post(url, data=data)
         assert response.status_code == code, (
-            f"Проверьте, что при POST запросе {url} "
-            f"возвращается статус {code}"
+            f"Проверьте, что при POST запросе {url} " f"возвращается статус {code}"
         )
 
     @pytest.mark.parametrize(
@@ -45,26 +43,26 @@ class TestEventAPI:
             (pytest.lazy_fixture("guest_client"), 200),
         ],
     )
-    def test_user_get_event_url(
-            self, user_client, code, event
-    ):
+    def test_user_get_event_url(self, user_client, code, event):
         """
         Все могут посмотреть все события
         """
         url = EVENT_LIST_URL
         response = user_client.get(url)
         assert response.status_code == code, (
-            f"Проверьте, что при GET запросе {url} "
-            f"возвращается статус {code}"
+            f"Проверьте, что при GET запросе {url} " f"возвращается статус {code}"
         )
         assert response.data["count"] == Event.objects.all().count(), (
             f"Проверьте, что при GET запросе {url} "
             f"возвращается правильное кол-во объектов"
         )
 
-    def test_moderator_get_event_url(self, moderator_client, event):
+    def test_moderator_get_event_detail_with_participant_url(
+        self, moderator_client, event
+    ):
         """
-        Автор события может видеть участников события
+        Автор события может видеть участников события при запросе деталей
+        определенного события
         """
         url = reverse(EVENT_DETAIL_URL, args=[event.id])
         response = moderator_client.get(url)
@@ -73,9 +71,11 @@ class TestEventAPI:
             f"возвращается правильное кол-во полей объекта"
         )
 
-    def test_not_moderator_get_event_url(self, not_moderator_client, event):
+    def test_not_moderator_get_event_detail_without_participant_url(
+        self, not_moderator_client, event
+    ):
         """
-        Не автор события может видеть участников события
+        Не автор события не может видеть участников события
         """
         url = reverse(EVENT_DETAIL_URL, args=[event.id])
         response = not_moderator_client.get(url)
@@ -102,8 +102,7 @@ class TestEventAPI:
         }
         response = user_client.patch(url, data=data)
         assert response.status_code == code, (
-            f"Проверьте, что при PATCH запросе {url} "
-            f"возвращается статус {code}"
+            f"Проверьте, что при PATCH запросе {url} " f"возвращается статус {code}"
         )
 
     @pytest.mark.parametrize(
@@ -124,6 +123,5 @@ class TestEventAPI:
         }
         response = user_client.delete(url, data=data)
         assert response.status_code == code, (
-            f"Проверьте, что при DELETE запросе {url} "
-            f"возвращается статус {code}"
+            f"Проверьте, что при DELETE запросе {url} " f"возвращается статус {code}"
         )

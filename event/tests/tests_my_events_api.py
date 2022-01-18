@@ -6,8 +6,7 @@ MY_EVENTS_URL = reverse("my_events")
 pytestmark = pytest.mark.django_db
 
 
-class TestEventAPI:
-
+class TestMyEventAPI:
     @pytest.mark.parametrize(
         "user_client, code",
         [
@@ -19,11 +18,10 @@ class TestEventAPI:
     def test_get_my_events_url(self, user_client, code):
         """
         Только зарегистрированный не модератор может запросить список
-        мероприятий,на которые он подписан
+        мероприятий, на которые он подписан
         """
         url = MY_EVENTS_URL
         response = user_client.get(url)
         assert response.status_code == code, (
-            f"Проверьте, что при GET запросе {url} "
-            f"возвращается статус {code}"
+            f"Проверьте, что при GET запросе {url} " f"возвращается статус {code}"
         )
