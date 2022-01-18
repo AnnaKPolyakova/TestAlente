@@ -2,9 +2,9 @@ from django.contrib import admin
 from django.contrib.admin import register
 from django.contrib.auth.admin import UserAdmin
 from django.contrib.auth.models import Group
-
 from django.utils.translation import gettext_lazy as _
-from event.models import Event, EventParticipant, User, Review
+
+from event.models import Event, EventParticipant, Review, User
 
 
 class UserAdmin(UserAdmin):
@@ -29,12 +29,7 @@ class UserAdmin(UserAdmin):
         (
             _("Permissions"),
             {
-                "fields": (
-                    "is_active",
-                    "is_staff",
-                    "is_superuser",
-                    "is_moderator"
-                ),
+                "fields": ("is_active", "is_staff", "is_superuser", "is_moderator"),
             },
         ),
         (_("Important dates"), {"fields": ("last_login", "date_joined")}),
@@ -84,4 +79,3 @@ class EventAdmin(admin.ModelAdmin):
 
 admin.site.register(User, UserAdmin)
 admin.site.unregister(Group)
-
